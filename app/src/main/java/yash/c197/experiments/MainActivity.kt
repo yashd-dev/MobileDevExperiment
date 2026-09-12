@@ -114,6 +114,15 @@ fun LandingPage(modifier: Modifier = Modifier) {
                     context.startActivity(Intent(context, StudentDetails::class.java))
                 }
             )
+
+            ActivityCard(
+                title = "Grocery With List View",
+                description = "Open Grocery Items with Lazy Loading.",
+                buttonText = "Open Activity",
+                onClick = {
+                    context.startActivity(Intent(context, GroceryItems::class.java))
+                }
+            )
         }
     }
 }
