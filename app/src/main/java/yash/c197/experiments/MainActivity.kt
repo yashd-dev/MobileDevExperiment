@@ -123,6 +123,15 @@ fun LandingPage(modifier: Modifier = Modifier) {
                     context.startActivity(Intent(context, GroceryItems::class.java))
                 }
             )
+
+            ActivityCard(
+                title = "Yashd Website",
+                description = "Open yashd.in inside the app using WebView.",
+                buttonText = "Open Website",
+                onClick = {
+                    context.startActivity(Intent(context, YashdWebViewActivity::class.java))
+                }
+            )
         }
     }
 }

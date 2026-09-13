@@ -55,4 +55,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("com.google.accompanist:accompanist-webview:0.34.0")
 }
