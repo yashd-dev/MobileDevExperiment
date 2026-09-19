@@ -10,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.signature.ObjectKey
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -23,7 +25,9 @@ fun SimpleImage(
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .aspectRatio(16f / 9f),
-    size: Int? = null
+    size: Int? = null,
+    targetSize: IntSize? = null,
+    signature: Long? = null,
 ) {
     GlideImage(
         model = model,
@@ -35,8 +39,14 @@ fun SimpleImage(
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
 
-        if (size != null) {
+        if (targetSize != null) {
+            glideRequest = glideRequest.override(targetSize.width, targetSize.height)
+        } else if (size != null) {
             glideRequest = glideRequest.override(size, size)
+        }
+
+        if (signature != null) {
+            glideRequest = glideRequest.signature(ObjectKey(signature))
         }
 
         glideRequest

@@ -13,14 +13,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -35,10 +38,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import yash.c197.experiments.ui.theme.ExperimentsTheme
+
+private const val GRID_COLUMNS = 3
+private val CELL_PADDING = 4.dp
 
 class GalleryPhotos : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +88,7 @@ fun GalleryPhotosScreen() {
             Text("Gallery Photos", style = MaterialTheme.typography.headlineMedium)
 
             if (hasPermission) {
-                val photos by produceState(initialValue = emptyList<Uri>()) {
+                val photos by produceState(initialValue = emptyList<GalleryImage>()) {
                     value = withContext(Dispatchers.IO) { getGalleryImages(context) }
                 }
                 PhotoGrid(photos)
@@ -99,32 +107,51 @@ fun GalleryPhotosScreen() {
 }
 
 @Composable
-fun PhotoGrid(photos: List<Uri>) {
+fun PhotoGrid(photos: List<GalleryImage>) {
     if (photos.isEmpty()) {
         Text("No photos found")
     } else {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            items(photos) { photo ->
-                SimpleImage(
-                    model = photo,
-                    description = "Gallery photo",
-                    modifier = Modifier.fillMaxWidth(),
-                    size = 220
-                )
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            val density = LocalDensity.current
+            val cellSize = IntSize(
+                width = ThumbnailSpec.cellWidthPx(
+                    gridWidthPx = with(density) { maxWidth.roundToPx() },
+                    columns = GRID_COLUMNS,
+                ),
+                height = ThumbnailSpec.heightPx(density.density),
+            )
+            val gridState = rememberLazyGridState()
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(GRID_COLUMNS),
+                state = gridState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(CELL_PADDING),
+                verticalArrangement = Arrangement.spacedBy(CELL_PADDING)
+            ) {
+                items(photos, key = { it.uri }) { photo ->
+                    SimpleImage(
+                        model = photo.uri,
+                        description = "Gallery photo",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(ThumbnailSpec.HEIGHT_DP.dp),
+                        targetSize = cellSize,
+                        signature = photo.dateModified
+                    )
+                }
             }
         }
     }
 }
 
-fun getGalleryImages(context: android.content.Context): List<Uri> {
-    val images = mutableListOf<Uri>()
-    val projection = arrayOf(MediaStore.Images.Media._ID)
+fun getGalleryImages(context: android.content.Context): List<GalleryImage> {
+    val images = mutableListOf<GalleryImage>()
+    val projection = arrayOf(
+        MediaStore.Images.Media._ID,
+        MediaStore.Images.Media.DATE_MODIFIED,
+    )
     val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
     context.contentResolver.query(
@@ -135,12 +162,18 @@ fun getGalleryImages(context: android.content.Context): List<Uri> {
         sortOrder
     )?.use { cursor ->
         val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+        val modifiedColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED)
         while (cursor.moveToNext()) {
             val id = cursor.getLong(idColumn)
             val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-            images.add(uri)
+            images.add(GalleryImage(uri, cursor.getLong(modifiedColumn)))
         }
     }
 
     return images
 }
+
+data class GalleryImage(
+    val uri: Uri,
+    val dateModified: Long,
+)
