@@ -1,4 +1,4 @@
-package yash.c197.experiments
+package yash.c197.experiments.exp02_know_your_number
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

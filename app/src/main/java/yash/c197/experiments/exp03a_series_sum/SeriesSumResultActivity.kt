@@ -1,4 +1,4 @@
-package yash.c197.experiments
+package yash.c197.experiments.exp03a_series_sum
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

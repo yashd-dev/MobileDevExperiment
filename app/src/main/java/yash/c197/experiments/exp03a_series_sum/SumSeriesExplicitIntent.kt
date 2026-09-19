@@ -1,12 +1,12 @@
-package yash.c197.experiments
+package yash.c197.experiments.exp03a_series_sum
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,19 +24,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import yash.c197.experiments.ui.theme.ExperimentsTheme
 
-class EvenOdd : ComponentActivity() {
+class SumSeriesExplicitIntent : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ExperimentsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    KnowYourNumberScreen(
+                    SeriesSumScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -46,9 +47,9 @@ class EvenOdd : ComponentActivity() {
 }
 
 @Composable
-fun KnowYourNumberScreen(modifier: Modifier = Modifier) {
+fun SeriesSumScreen(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     var number by remember { mutableStateOf("") }
-    var answer by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -57,11 +58,11 @@ fun KnowYourNumberScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
     ) {
         Text(
-            text = "Know Your Number",
+            text = "SeriesSum",
             style = MaterialTheme.typography.headlineMedium
         )
         Text(
-            text = "Enter a number and choose what you want to know.",
+            text = "Find the sum of n terms of the series: 1 + 1/2 + 1/3 + ... + 1/n",
             style = MaterialTheme.typography.bodyLarge
         )
 
@@ -73,51 +74,33 @@ fun KnowYourNumberScreen(modifier: Modifier = Modifier) {
                 OutlinedTextField(
                     value = number,
                     onValueChange = { number = it },
-                    label = { Text("Enter Number") },
+                    label = { Text("Enter n") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(onClick = {
-                        val input = number.toIntOrNull()
-                        if (input == null || input < 0) {
-                            answer = "Please enter a positive number"
-                        } else {
-                            var factorial = 1
-                            for (i in 1..input) {
-                                factorial *= i
-                            }
-                            answer = "Factorial of $input is $factorial"
+                Button(onClick = {
+                    val n = number.toIntOrNull()
+                    var result = 0.0
+
+                    if (n != null && n > 0) {
+                        for (i in 1..n) {
+                            result += 1.0 / i
                         }
-                    }) {
-                        Text(text = "Factorial")
                     }
 
-                    Button(onClick = {
-                        val input = number.toIntOrNull()
-                        answer = if (input == null) {
-                            "Please enter a number"
-                        } else if (input % 2 == 0) {
-                            "$input is Even"
-                        } else {
-                            "$input is Odd"
-                        }
-                    }) {
-                        Text(text = "Even/Odd")
+                    val answer = if (n == null || n <= 0) {
+                        "Please enter a positive number"
+                    } else {
+                        "Sum of $n terms is $result"
                     }
+
+                    val intent = Intent(context, SeriesSumResultActivity::class.java)
+                    intent.putExtra("answer", answer)
+                    context.startActivity(intent)
+                }) {
+                    Text(text = "SUM THE SERIES")
                 }
-
-                OutlinedTextField(
-                    value = answer,
-                    onValueChange = { answer = it },
-                    label = { Text("Answer") },
-                    readOnly = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
             }
         }
     }
@@ -125,8 +108,8 @@ fun KnowYourNumberScreen(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun KnowYourNumberPreview() {
+fun SeriesSumPreview() {
     ExperimentsTheme {
-        KnowYourNumberScreen()
+        SeriesSumScreen()
     }
 }

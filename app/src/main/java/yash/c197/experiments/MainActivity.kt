@@ -22,6 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import yash.c197.experiments.exp02_know_your_number.BasicCalculatorActivity
+import yash.c197.experiments.exp02_know_your_number.EvenOdd
+import yash.c197.experiments.exp03a_series_sum.SumSeriesExplicitIntent
+import yash.c197.experiments.exp03b_external_apps.LaunchExternalApps
+import yash.c197.experiments.exp04_student_details.GroceryItems
+import yash.c197.experiments.exp04_student_details.StudentDetails
+import yash.c197.experiments.exp05_webview.YashdWebViewActivity
 import yash.c197.experiments.ui.theme.ExperimentsTheme
 
 class MainActivity : ComponentActivity() {
@@ -71,7 +78,7 @@ fun LandingPage(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             ActivityCard(
-                title = "Basic Calculator",
+                title = "Exp 2A - Basic Calculator",
                 description = "Enter two numbers and choose an operation.",
                 buttonText = "Open Calculator",
                 onClick = {
@@ -80,7 +87,7 @@ fun LandingPage(modifier: Modifier = Modifier) {
             )
 
             ActivityCard(
-                title = "Know Your Number",
+                title = "Exp 2B - Know Your Number",
                 description = "Find factorial and check whether a number is even or odd.",
                 buttonText = "Open Activity",
                 onClick = {
@@ -89,7 +96,7 @@ fun LandingPage(modifier: Modifier = Modifier) {
             )
 
             ActivityCard(
-                title = "SeriesSum",
+                title = "Exp 3A - SeriesSum",
                 description = "Find the sum of 1 + 1/2 + 1/3 + ... + 1/n using explicit intent.",
                 buttonText = "Open Activity",
                 onClick = {
@@ -98,7 +105,7 @@ fun LandingPage(modifier: Modifier = Modifier) {
             )
 
             ActivityCard(
-                title = "Launch External Apps",
+                title = "Exp 3B - Launch External Apps",
                 description = "Open browser, Google Maps, and call dialer using implicit intents.",
                 buttonText = "Open Activity",
                 onClick = {
@@ -107,7 +114,7 @@ fun LandingPage(modifier: Modifier = Modifier) {
             )
 
             ActivityCard(
-                title = "Student Details",
+                title = "Exp 4A - Student Details",
                 description = "Open a welcome screen, then show student details in a ListView.",
                 buttonText = "Open Activity",
                 onClick = {
@@ -116,7 +123,7 @@ fun LandingPage(modifier: Modifier = Modifier) {
             )
 
             ActivityCard(
-                title = "Grocery With List View",
+                title = "Exp 4B - Grocery With List View",
                 description = "Open Grocery Items with Lazy Loading.",
                 buttonText = "Open Activity",
                 onClick = {
@@ -125,7 +132,7 @@ fun LandingPage(modifier: Modifier = Modifier) {
             )
 
             ActivityCard(
-                title = "Yashd Website",
+                title = "Exp 5 - Yashd Website",
                 description = "Open yashd.in inside the app using WebView.",
                 buttonText = "Open Website",
                 onClick = {

@@ -1,4 +1,4 @@
-package yash.c197.experiments
+package yash.c197.experiments.exp04_student_details
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

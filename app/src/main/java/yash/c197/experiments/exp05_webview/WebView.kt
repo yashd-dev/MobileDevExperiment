@@ -1,4 +1,4 @@
-package yash.c197.experiments
+package yash.c197.experiments.exp05_webview
 
 import android.annotation.SuppressLint
 import android.os.Bundle

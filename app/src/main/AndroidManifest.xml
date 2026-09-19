@@ -15,48 +15,48 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Experiments">
         <activity
-            android:name=".BasicCalculatorActivity"
+            android:name=".exp02_know_your_number.BasicCalculatorActivity"
             android:exported="false"
             android:theme="@style/Theme.Experiments"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".EvenOdd"
+            android:name=".exp02_know_your_number.EvenOdd"
             android:exported="false"
             android:theme="@style/Theme.Experiments"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".SeriesSumResultActivity"
+            android:name=".exp03a_series_sum.SeriesSumResultActivity"
             android:exported="false"
             android:theme="@style/Theme.Experiments"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".SumSeriesExplicitIntent"
+            android:name=".exp03a_series_sum.SumSeriesExplicitIntent"
             android:exported="false"
             android:theme="@style/Theme.Experiments"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".LaunchExternalApps"
+            android:name=".exp03b_external_apps.LaunchExternalApps"
             android:exported="false"
             android:theme="@style/Theme.Experiments"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".StudentDetailsMenuActivity"
+            android:name=".exp04_student_details.StudentDetailsMenuActivity"
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
-            android:name=".StudentDetails"
+            android:name=".exp04_student_details.StudentDetails"
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
-            android:name=".GroceryItemDetailActivity"
+            android:name=".exp04_student_details.GroceryItemDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
-            android:name=".GroceryItems"
+            android:name=".exp04_student_details.GroceryItems"
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
-            android:name=".YashdWebViewActivity"
+            android:name=".exp05_webview.YashdWebViewActivity"
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
