@@ -24,23 +24,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import yash.c197.experiments.ui.theme.ExperimentsTheme
 
-class CameraImageActivity : ComponentActivity() {
+class CameraPhoto : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ExperimentsTheme {
-                CameraImageScreen()
+                CameraPhotoScreen()
             }
         }
     }
 }
 
 @Composable
-fun CameraImageScreen() {
-    var capturedBitmap by remember { mutableStateOf<Bitmap?>(null) }
-    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-        capturedBitmap = it
+fun CameraPhotoScreen() {
+    var photo by remember { mutableStateOf<Bitmap?>(null) }
+    val camera = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+        photo = it
     }
 
     Scaffold { innerPadding ->
@@ -52,11 +52,11 @@ fun CameraImageScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text("Take Photo", style = MaterialTheme.typography.headlineMedium)
-            Button(onClick = { cameraLauncher.launch(null) }) {
-                Text("Take Photo")
+            Button(onClick = { camera.launch(null) }) {
+                Text("Open Camera")
             }
-            capturedBitmap?.let {
-                GlideImage(model = it, contentDescription = "Captured photo")
+            photo?.let {
+                SimpleImage(model = it, description = "Camera photo")
             }
         }
     }

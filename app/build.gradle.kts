@@ -57,4 +57,5 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
     implementation("com.google.accompanist:accompanist-webview:0.34.0")
     implementation("com.github.bumptech.glide:glide:5.0.5")
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 }

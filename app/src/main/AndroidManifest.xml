@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -63,19 +65,19 @@
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
-            android:name=".exp06_image_loading.ImageLoadingActivity"
+            android:name=".exp06_image_loading.Exp6Menu"
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
-            android:name=".exp06_image_loading.CameraImageActivity"
+            android:name=".exp06_image_loading.CameraPhoto"
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
-            android:name=".exp06_image_loading.GalleryImagesActivity"
+            android:name=".exp06_image_loading.GalleryPhotos"
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
-            android:name=".exp06_image_loading.ProductImagesActivity"
+            android:name=".exp06_image_loading.ApiProducts"
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity

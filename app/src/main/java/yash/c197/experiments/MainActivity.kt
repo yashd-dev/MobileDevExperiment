@@ -29,7 +29,7 @@ import yash.c197.experiments.exp03b_external_apps.LaunchExternalApps
 import yash.c197.experiments.exp04_student_details.GroceryItems
 import yash.c197.experiments.exp04_student_details.StudentDetails
 import yash.c197.experiments.exp05_webview.YashdWebViewActivity
-import yash.c197.experiments.exp06_image_loading.ImageLoadingActivity
+import yash.c197.experiments.exp06_image_loading.Exp6Menu
 import yash.c197.experiments.ui.theme.ExperimentsTheme
 
 class MainActivity : ComponentActivity() {
@@ -146,7 +146,7 @@ fun LandingPage(modifier: Modifier = Modifier) {
                 description = "Capture photos, pick gallery images, and load product images with Glide.",
                 buttonText = "Open Image Loader",
                 onClick = {
-                    context.startActivity(Intent(context, ImageLoadingActivity::class.java))
+                    context.startActivity(Intent(context, Exp6Menu::class.java))
                 }
             )
         }

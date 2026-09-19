@@ -35,37 +35,36 @@ import java.net.HttpURLConnection
 import java.net.URL
 import yash.c197.experiments.ui.theme.ExperimentsTheme
 
-class ProductImagesActivity : ComponentActivity() {
+class ApiProducts : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ExperimentsTheme {
-                ProductImagesScreen()
+                ApiProductsScreen()
             }
         }
     }
 }
 
 data class Product(
-    val id: Int,
     val title: String,
     val price: String,
     val rating: String,
-    val thumbnail: String
+    val image: String
 )
 
 @Composable
-fun ProductImagesScreen() {
+fun ApiProductsScreen() {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
-    var error by remember { mutableStateOf<String?>(null) }
+    var error by remember { mutableStateOf(false) }
 
     LaunchedEffect(loading) {
         if (loading) {
-            runCatching { fetchProducts() }
+            runCatching { getProducts() }
                 .onSuccess { products = it }
-                .onFailure { error = it.message ?: "Failed to load products" }
+                .onFailure { error = true }
             loading = false
         }
     }
@@ -75,27 +74,26 @@ fun ProductImagesScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
-                Column(
-                    modifier = Modifier.padding(top = 36.dp, bottom = 4.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text("Product Images", style = MaterialTheme.typography.headlineMedium)
-                    Text("Loaded from dummyjson.com/products?limit=0", style = MaterialTheme.typography.bodyMedium)
-                    Button(onClick = { loading = true; error = null }) {
-                        Text("Refresh")
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("API Products", style = MaterialTheme.typography.headlineMedium)
+                    Text("Fetching products from dummyjson.com")
+                    Button(onClick = { loading = true; error = false }) {
+                        Text("Fetch Again")
                     }
-                    error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                    if (error) {
+                        Text("Could not load products", color = MaterialTheme.colorScheme.error)
+                    }
                 }
             }
 
             if (loading) {
-                items(6) { ProductSkeletonCard() }
+                items(6) { LoadingProductCard() }
             } else {
-                items(products, key = { it.id }) { product ->
+                items(products) { product ->
                     ProductCard(product)
                 }
             }
@@ -104,16 +102,17 @@ fun ProductImagesScreen() {
 }
 
 @Composable
-private fun ProductCard(product: Product) {
+fun ProductCard(product: Product) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            GlideImage(
-                model = product.thumbnail,
-                contentDescription = product.title,
-                modifier = Modifier.size(96.dp)
+            SimpleImage(
+                model = product.image,
+                description = product.title,
+                modifier = Modifier.size(96.dp),
+                size = 192
             )
             Column(
                 modifier = Modifier
@@ -122,44 +121,42 @@ private fun ProductCard(product: Product) {
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(product.title, style = MaterialTheme.typography.titleMedium)
-                Text("$${product.price}  |  Rating ${product.rating}", style = MaterialTheme.typography.bodyMedium)
+                Text("$${product.price} | Rating ${product.rating}")
             }
         }
     }
 }
 
 @Composable
-private fun ProductSkeletonCard() {
+fun LoadingProductCard() {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            SkeletonBox(modifier = Modifier.size(96.dp))
+            SimplePlaceholder(modifier = Modifier.size(96.dp))
             Column(modifier = Modifier.padding(start = 12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                SkeletonBox(modifier = Modifier.fillMaxWidth(0.75f).height(18.dp))
-                SkeletonBox(modifier = Modifier.fillMaxWidth(0.45f).height(14.dp))
-                SkeletonBox(modifier = Modifier.fillMaxWidth(0.55f).height(14.dp))
+                SimplePlaceholder(modifier = Modifier.fillMaxWidth(0.75f).height(18.dp))
+                SimplePlaceholder(modifier = Modifier.fillMaxWidth(0.45f).height(14.dp))
+                SimplePlaceholder(modifier = Modifier.fillMaxWidth(0.55f).height(14.dp))
             }
         }
     }
 }
 
-private suspend fun fetchProducts(): List<Product> = withContext(Dispatchers.IO) {
-    val url = "https://dummyjson.com/products?limit=0&select=id,title,price,rating,thumbnail"
-    val connection = URL(url).openConnection() as HttpURLConnection
-    connection.connectTimeout = 10_000
-    connection.readTimeout = 10_000
+private suspend fun getProducts(): List<Product> = withContext(Dispatchers.IO) {
+    val api = "https://dummyjson.com/products?limit=50&select=title,price,rating,thumbnail"
+    val connection = URL(api).openConnection() as HttpURLConnection
     connection.requestMethod = "GET"
 
     try {
-        val response = connection.inputStream.bufferedReader().use { it.readText() }
-        val products = JSONObject(response).getJSONArray("products")
-        List(products.length()) { index ->
-            val item = products.getJSONObject(index)
+        val text = connection.inputStream.bufferedReader().use { it.readText() }
+        val array = JSONObject(text).getJSONArray("products")
+
+        List(array.length()) { index ->
+            val item = array.getJSONObject(index)
             Product(
-                id = item.getInt("id"),
                 title = item.getString("title"),
                 price = item.getDouble("price").toString(),
                 rating = item.getDouble("rating").toString(),
-                thumbnail = item.getString("thumbnail")
+                image = item.getString("thumbnail")
             )
         }
     } finally {
