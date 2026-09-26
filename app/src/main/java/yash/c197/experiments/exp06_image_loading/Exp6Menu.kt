@@ -46,7 +46,6 @@ fun Exp6MenuScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text("Exp 6 - Image Loading", style = MaterialTheme.typography.headlineMedium)
-            Text("Trying camera, gallery and API images using Glide.")
 
             MenuCard("Take Photo", "Capture image from camera") {
                 context.startActivity(Intent(context, CameraPhoto::class.java))
