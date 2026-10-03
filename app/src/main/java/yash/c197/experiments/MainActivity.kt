@@ -30,6 +30,7 @@ import yash.c197.experiments.exp04_student_details.GroceryItems
 import yash.c197.experiments.exp04_student_details.StudentDetails
 import yash.c197.experiments.exp05_webview.YashdWebViewActivity
 import yash.c197.experiments.exp06_image_loading.Exp6Menu
+import yash.c197.experiments.exp10_room_database.Exp10RoomDatabaseActivity
 import yash.c197.experiments.ui.theme.ExperimentsTheme
 
 class MainActivity : ComponentActivity() {
@@ -147,6 +148,15 @@ fun LandingPage(modifier: Modifier = Modifier) {
                 buttonText = "Open Image Loader",
                 onClick = {
                     context.startActivity(Intent(context, Exp6Menu::class.java))
+                }
+            )
+
+            ActivityCard(
+                title = "Exp 10 - Room Database",
+                description = "Perform insert, update, delete, and view operations using Room.",
+                buttonText = "Open Room CRUD",
+                onClick = {
+                    context.startActivity(Intent(context, Exp10RoomDatabaseActivity::class.java))
                 }
             )
         }

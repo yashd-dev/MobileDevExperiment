@@ -81,6 +81,11 @@
             android:exported="false"
             android:theme="@style/Theme.Experiments" />
         <activity
+            android:name=".exp10_room_database.Exp10RoomDatabaseActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Experiments"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
